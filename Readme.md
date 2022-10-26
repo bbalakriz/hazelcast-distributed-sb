@@ -1,13 +1,12 @@
-## Deploy this app to Openshift
+## Install hazelcast
 
 ```
 oc new-project hazelcast-distributed
 ```
 
-## Install hazelcast
-Install the Hazelcast Platform Operator (community version) in the namespace `hazelcast-distributed` from the openshift webconsole or by using `apply -f https://repository.hazelcast.com/operator/bundle-latest.yaml`
+Install Hazelcast Platform Operator (community version) in the namespace `hazelcast-distributed` from the openshift webconsole or by using `apply -f https://repository.hazelcast.com/operator/bundle-latest.yaml`
 
-Install Hazelcast resource
+Install the following Hazelcast resource:
 
 ```
 cat << EOF | oc apply -f -
@@ -18,6 +17,7 @@ metadata:
 EOF
 ```
 
+## Deploy the app to Openshift
 ```
 oc new-build https://github.com/bbalakriz/hazelcast-distributed-sb.git --dockerfile='FROM maven:3.6.3-openjdk-11 as builder
 WORKDIR /project
@@ -55,4 +55,4 @@ Now log into each pod terminal and do a get. It should return the same value irr
 curl -v  http://localhost:8080/get?key=7889
 ```
 
-Reference: https://hazelcast.com/blog/how-to-use-distributed-hazelcast-on-kubernetes/
+Reference: https://docs.hazelcast.com/tutorials/kubernetes
