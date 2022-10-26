@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hazelcast-embedded-sb
+  name: hazelcast-distributed-sb
   labels:
-    app.kubernetes.io/part-of: hazelcast-embedded-sb
+    app.kubernetes.io/part-of: hazelcast-distributed-sb
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: hazelcast-embedded-sb
+      app: hazelcast-distributed-sb
   template:
     metadata:
       labels:
-        app: hazelcast-embedded-sb
+        app: hazelcast-distributed-sb
     spec:
       containers:
-        - name: hazelcast-embedded-sb
-          image: image-registry.openshift-image-registry.svc:5000/hazelcast-embedded/hazelcast-embedded-sb
+        - name: hazelcast-distributed-sb
+          image: image-registry.openshift-image-registry.svc:5000/hazelcast-distributed/hazelcast-distributed-sb
           imagePullPolicy: Always
           ports:
             - containerPort: 5701
@@ -25,12 +25,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hazelcast-embedded-sb
+  name: hazelcast-distributed-sb
   labels:
-    app.kubernetes.io/part-of: hazelcast-embedded-sb
+    app.kubernetes.io/part-of: hazelcast-distributed-sb
 spec:
   selector:
-    app: hazelcast-embedded-sb
+    app: hazelcast-distributed-sb
   ports:
     - name: hazelcast
       port: 5701
@@ -48,14 +48,14 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: hazelcast-embedded
+    namespace: hazelcast-distributed
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: hazelcast-embedded-sb
+  name: hazelcast-distributed-sb
   labels:
-    app.kubernetes.io/part-of: hazelcast-embedded-sb
+    app.kubernetes.io/part-of: hazelcast-distributed-sb
 spec:
   port:
     targetPort: app
@@ -63,6 +63,6 @@ spec:
     termination: edge
   to:
     kind: Service
-    name: hazelcast-embedded-sb
+    name: hazelcast-distributed-sb
     weight: 100
   wildcardPolicy: None
