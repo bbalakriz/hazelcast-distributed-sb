@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hazelcast-embedded-sb
+  labels:
+    app.kubernetes.io/part-of: hazelcast-embedded-sb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hazelcast-embedded-sb
+  template:
+    metadata:
+      labels:
+        app: hazelcast-embedded-sb
+    spec:
+      containers:
+        - name: hazelcast-embedded-sb
+          image: image-registry.openshift-image-registry.svc:5000/hazelcast-embedded/hazelcast-embedded-sb
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5701
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hazelcast-embedded-sb
+  labels:
+    app.kubernetes.io/part-of: hazelcast-embedded-sb
+spec:
+  selector:
+    app: hazelcast-embedded-sb
+  ports:
+    - name: hazelcast
+      port: 5701
+    - name: app
+      port: 8080
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: view-cluster-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: hazelcast-embedded
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: hazelcast-embedded-sb
+  labels:
+    app.kubernetes.io/part-of: hazelcast-embedded-sb
+spec:
+  port:
+    targetPort: app
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: hazelcast-embedded-sb
+    weight: 100
+  wildcardPolicy: None
