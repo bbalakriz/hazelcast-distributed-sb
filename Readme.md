@@ -4,7 +4,7 @@
 oc new-project hazelcast-distributed
 ```
 
-Install Hazelcast Platform Operator (community version) in the namespace `hazelcast-distributed` from the openshift webconsole or by using `apply -f https://repository.hazelcast.com/operator/bundle-latest.yaml`
+Install Hazelcast Platform Operator (community version) in the namespace `hazelcast-distributed` from the openshift webconsole or by `oc apply -f https://repository.hazelcast.com/operator/bundle-latest.yaml`
 
 Install the following Hazelcast resource:
 
